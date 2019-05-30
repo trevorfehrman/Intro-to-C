@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 /*
     Given a character pointer x (that points to an array of chars), and a
@@ -8,14 +9,18 @@
 
     Example call:
 
-    char buffer[1024];
+"    char buffer[1024];
 
     string_copy(buffer, "Hello!");
-    printf("%s", buffer); // Prints "Hello!"
+    printf("%s", buffer); // Prints "Hello!
 */
 void string_copy(char *x, char *y)
 {
-
+    while (*y)
+    {
+        *x++ = *y++;
+    }
+    *x = '\0';
 }
 
 /*
@@ -26,9 +31,17 @@ void string_copy(char *x, char *y)
 
     Do not use the `strchr` function from the standard library.
 */
-char *find_char(char *str, int c)
+char *find_char(char *str, char c)
 {
-
+    while (*str)
+    {
+        if (*str == c)
+        {
+            return str;
+        }
+        str++;
+    }
+    return NULL;
 }
 
 /*
@@ -41,7 +54,24 @@ char *find_char(char *str, int c)
 */
 char *find_string(char *haystack, char *needle)
 {
+    int haystack_length = strlen(haystack);
+    int needle_length = strlen(needle);
+    char * needle_address = needle;
 
+    while(*haystack) {
+
+        char * haystack_address = haystack;
+        while(*haystack == *needle) {
+            haystack++;
+            needle++;
+            if (*needle == '\0'){
+                return haystack_address;
+            }
+        }
+
+        haystack++;
+    }
+    return NULL;
 }
 
 #ifndef TESTING

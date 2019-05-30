@@ -10,9 +10,21 @@
     You may want to use the string_length function to figure out the
     length of the input string.
 */
+void string_copy(char *x, char *y)
+{
+    while (*y)
+    {
+        *x++ = *y++;
+    }
+    *x = '\0';
+}
+
 char *string_dup(char *src)
 {
-
+    int src_length = strln(src);
+    char *copy = malloc(src_length * sizeof(char) + 1);
+    string_copy(copy, src);
+    return copy;
 }
 
 /*
@@ -22,9 +34,13 @@ char *string_dup(char *src)
     performing the copying. `n` is the amount of data that should be copied
     from `src` to `dest`. 
 */
-void mem_copy(void *dest, const void *src, int n)
+void *mem_copy(void *dest, const void *src, int n)
 {
-
+    char *to = dest;
+    const char *from = src;
+    while (n--)
+        *to++ = *from++;
+    return dest;
 }
 
 /*
@@ -40,7 +56,13 @@ void mem_copy(void *dest, const void *src, int n)
 */
 void *resize_memory(void *ptr, int old_size, int new_size)
 {
-
+    void *new_ptr = malloc(new_size);
+    int size = new_size;
+    if (old_size < new_size)
+        size = old_size;
+    mem_copy(new_ptr, ptr, size);
+    ptr = new_ptr;
+    return ptr;
 }
 
 #ifndef TESTING
@@ -54,12 +76,13 @@ int main(void)
     int numbers[] = {100, 55, 4, 98, 10, 18, 90, 95, 43, 11, 47, 67, 89, 42, 49, 79};
     int n = sizeof(numbers) / sizeof(numbers[0]);
     int *target = malloc(n * sizeof(int));
-    
+
     mem_copy(target, numbers, n * sizeof(int));
 
     printf("Copied array: ");
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
         printf("%d ", target[i]);
     }
 
@@ -69,12 +92,13 @@ int main(void)
     char *path = string_dup("/students/");
     int url_length = string_length(url);
     int path_length = string_length(path);
-    
+
     int new_length = url_length - 1 + path_length;
     char *new_url = resize_memory(url, url_length, new_length);
     char *p = new_url + url_length;
 
-    while (*path != '\0') {
+    while (*path != '\0')
+    {
         *p = *path;
         p++;
         path++;
